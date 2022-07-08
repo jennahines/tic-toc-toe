@@ -13,6 +13,7 @@ const gameBoard = (() => {
 	const board = ['', '', '', '', '', '', '', '', ''];
 
 	const setField = (index, token) => {
+		console.log(`set ${index} to ${token}`);
 		board[index] = token;
 	}
 
@@ -34,12 +35,30 @@ const gameBoard = (() => {
 
 const displayController = (() => {
 	const $spaces = document.querySelectorAll('.game-board-space');
-	const $resetButton = document.getElementById('reset-button')
+	const $resetButton = document.getElementById('reset-button');
 
+	for (const space of $spaces) {
+		space.addEventListener('click', (e) => {
+			e.preventDefault();
+			const index = space.dataset.index;
+			if ( !space.classList.contains( 'filled' ) ) {
+				gameBoard.setField(index, 'x');
+				updateGameBoard();
+			}
+		});
+	}
 
 	$resetButton.addEventListener('click', (e) => {
 		gameBoard.resetBoard();
+		updateGameBoard();
 	});
+
+	const updateGameBoard = () => {
+		for ( let i = 0; i < $spaces.length; i++ ) {
+			$spaces[i].innerText = gameBoard.getField(i);
+		}
+	};
+
 	
 })();
 
