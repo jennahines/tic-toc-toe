@@ -1,0 +1,50 @@
+body {
+	height: 100vh;
+	width: 100vw;
+	display: grid;
+	grid-template-areas: "grid grid"
+						 "actions actions"
+						 "player1 player2";
+	grid-template-rows: 50vh min-content min-content;
+	justify-items: center;
+}
+
+.button {
+	border: 2px solid darkolivegreen;
+	color: darkolivegreen;
+	padding: .5rem 2rem;
+}
+.button:hover {
+	background: lightgoldenrodyellow;
+}
+/* ==========================================================================
+GAME BOARD
+========================================================================== */
+#game-board {
+	grid-area: grid;
+	border: 1px solid lightsalmon;
+	display: inline-grid;
+	grid-template-columns: repeat(3, 100px);
+	grid-template-rows: repeat(3, 100px);
+	margin: auto;
+}
+
+.game-board-space {
+	border: 1px solid lightsalmon;
+	display: flex;
+}
+
+
+.game-board-actions {
+	grid-area: actions;
+}
+
+/* ==========================================================================
+PLAYERS
+========================================================================== */
+.player[data-player-id="1"] {
+	grid-area: player1;
+}
+.player[data-player-id="2"] {
+	grid-area: player2;
+}
