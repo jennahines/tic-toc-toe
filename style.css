@@ -41,6 +41,15 @@ GAME BOARD
 	text-transform: uppercase;
 }
 
+.game-board-space.filled {
+	background-color: palegoldenrod;
+	cursor: auto;
+}
+
+.game-board-space:not(.filled):hover,
+.game-board-space:not(.filled):focus {
+	background-color: lightgoldenrodyellow;
+}
 
 .game-board-actions {
 	grid-area: actions;
