@@ -1,38 +1,68 @@
+:root {
+	--color-primary: MediumPurple;
+	--color-primary-light: Plum;
+	--color-primary-dark: Indigo;
+	
+	--color-secondary: ForestGreen;
+	--color-secondary-light: LightGreen;
+	--color-secondary-dark: DarkGreen;
+
+	--color-white: WhiteSmoke;
+	--color-black: DimGray;
+}
+
+
 body {
 	font-size: 16px;
 	line-height: 1.6;
 	height: 100vh;
 	width: 100vw;
 	display: grid;
-	grid-template-areas: "grid grid"
-						 "actions actions"
-						 "player1 player2";
-	grid-template-rows: 50vh min-content min-content;
+	grid-template-areas: "players"
+						 "grid"
+						 "actions";
+	grid-template-rows: min-content min-content min-content;
+	gap: 4rem;
+	padding: 4rem;
 	justify-items: center;
 }
 
 .button {
-	border: 2px solid darkolivegreen;
-	color: darkolivegreen;
+	border: 2px solid var(--color-secondary-dark);
+	outline: 2px solid transparent;
+	outline-offset: 0;
+	border-radius: 3px;
+	color: var(--color-secondary-dark);
+	font-size: 1.125rem;
+	text-transform: uppercase;
+	letter-spacing: .02rem;
+	font-weight: 700;
 	padding: .5rem 2rem;
+	transition: .3s outline ease, .2s outline-offset .1s ease, .2s color ease;
 }
 .button:hover {
-	background: lightgoldenrodyellow;
+	outline-color: var(--color-secondary-dark);
+	outline-offset: 4px;
+	color: var(--color-secondary);
+}
+
+[hidden] {
+	visibility: hidden;
 }
 /* ==========================================================================
-GAME BOARD
+GAME BOARD / ACTIONS
 ========================================================================== */
 #game-board {
 	grid-area: grid;
-	border: 1px solid lightsalmon;
+	border: 1px solid var(--color-primary);
 	display: inline-grid;
-	grid-template-columns: repeat(3, 100px);
-	grid-template-rows: repeat(3, 100px);
+	grid-template-columns: repeat(3, 150px);
+	grid-template-rows: repeat(3, 150px);
 	margin: auto;
 }
 
 .game-board-space {
-	border: 1px solid lightsalmon;
+	border: 1px solid var(--color-primary);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -42,25 +72,69 @@ GAME BOARD
 }
 
 .game-board-space.filled {
-	background-color: palegoldenrod;
+	background-color: var(--color-primary-light);
 	cursor: auto;
 }
 
 .game-board-space:not(.filled):hover,
 .game-board-space:not(.filled):focus {
-	background-color: lightgoldenrodyellow;
+	background-color: var(--color-primary-dark);
 }
 
 .game-board-actions {
 	grid-area: actions;
+	display: grid;
+}
+
+.game-board-actions h2 {
+	color: var(--color-primary);
+	text-align: center;
+	font-weight: 700;
+	font-size: 2rem;
+	margin-bottom: 1rem;
+}
+
+.game-board-actions .button {
+	min-width: 200px;
+	margin: auto;
 }
 
 /* ==========================================================================
-PLAYERS
+FORM / PLAYERS
 ========================================================================== */
+form {
+	grid-area: players;
+	display: grid;
+	grid-template-areas: "player1 player2"
+						 "button button";
+	grid-template-rows: min-content min-content;
+	gap: 1rem;
+	padding: 1rem;
+}
+
+form input[type="text"] {
+	border: 1px solid var(--color-black);
+	border-radius: 3px;
+	padding: .5rem;
+}
+form input[type="text"]:focus { 
+	outline-color: var(--color-primary-dark);
+}
+
+form button {
+	grid-area: button;
+	align-items: center;
+	justify-content: center;
+}
+
 .player[data-player-id="1"] {
 	grid-area: player1;
 }
 .player[data-player-id="2"] {
 	grid-area: player2;
+}
+.player {
+	display: flex;
+	flex-direction: column;
+	row-gap: 1rem;
 }

@@ -37,15 +37,13 @@ const displayController = (() => {
 	const $spaces = document.querySelectorAll('.game-board-space');
 	const $resetButton = document.getElementById('reset-button');
 
-	const $player1 = document.querySelector('[data-player-id="1"]');
-	const $player2 = document.querySelector('[data-player-id="2"]');
 	const $message = document.querySelector('[data-message]');
 
 	for (const space of $spaces) {
 		space.addEventListener('click', (e) => {
 			e.preventDefault();
 			if ( gameController.isGameOver() || '' !== e.target.innerText ) return;
-			
+
 			const index = space.dataset.index;
 			gameController.playGame(parseInt(index));
 			updateGameBoard();
@@ -78,24 +76,49 @@ const displayController = (() => {
 		}
 	}
 
-	const setPlayerInfo = (p1, p2) => {
-		$player1.querySelector('[data-name]').innerText = p1.getName();
-		$player1.querySelector('[data-token]').innerText = p1.getToken();
-
-		$player2.querySelector('[data-name]').innerText = p2.getName();
-		$player2.querySelector('[data-token]').innerText = p2.getToken();
-
-	}
-
-	return { setPlayerInfo, setMessage };
+	return { setMessage };
 })();
 
 
 const gameController = (() => {
-	const p1 = player('Player 1', 'x');
-	const p2 = player('Player 2', 'o');
+	let p1 = null;
+	let p2 = null;
 	let round = 1;
 	let gameOver = false;
+
+	const $board = document.querySelector('#game-board');
+	const $boardActions = document.querySelector('.game-board-actions');
+	const $player1NameInput = document.querySelector('#player-1-name');
+	const $player2NameInput = document.querySelector('#player-2-name');
+	const $player1TokenInput = document.querySelector('#player-1-token');
+	const $player2TokenInput = document.querySelector('#player-2-token');
+	
+	const $startGameButton = document.querySelector('[data-start-game]');
+
+	$startGameButton.addEventListener('click', (e) => {
+		e.preventDefault();
+		if( '' !== $player1NameInput.value && '' !== $player2NameInput.value && '' !== $player1TokenInput.value && '' !== $player2TokenInput.value ) {
+
+			if ( $player1TokenInput.value.toUpperCase() === $player2TokenInput.value.toUpperCase() ) {
+				alert( 'Player 1 Token and Player 2 Token cannot be the same' );
+
+			}
+			else if ( $player1NameInput.value.toUpperCase() === $player2NameInput.value.toUpperCase() ) {
+				alert( 'Player 1 Name and Player 2 Name cannot be the same' );
+
+			} else {
+				$board.removeAttribute('hidden');
+				$boardActions.removeAttribute('hidden');
+				p1 = player($player1NameInput.value, $player1TokenInput.value);
+				p2 = player($player2NameInput.value, $player2TokenInput.value);
+				displayController.setMessage(`${getCurrentPlayerName()}'s Turn`);
+					
+
+			}
+		} else {
+			alert( 'Please enter names and tokens for players' );
+		}
+	});
 
 	const getCurrentPlayerToken = () => {
 		return round % 2 === 1 ? p1.getToken() : p2.getToken();
@@ -150,9 +173,6 @@ const gameController = (() => {
 	const isGameOver = () => {
 		return gameOver;
 	}
-
-	displayController.setPlayerInfo(p1, p2);
-	displayController.setMessage(`${getCurrentPlayerName()}'s Turn`);
 
 	return { playGame, resetGame, getCurrentPlayerName, isGameOver };
 
