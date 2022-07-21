@@ -44,8 +44,10 @@ const displayController = (() => {
 	for (const space of $spaces) {
 		space.addEventListener('click', (e) => {
 			e.preventDefault();
+			if ( gameController.isGameOver() || '' !== e.target.innerText ) return;
+			
 			const index = space.dataset.index;
-			gameController.playGame(index);
+			gameController.playGame(parseInt(index));
 			updateGameBoard();
 		});
 	}
@@ -93,6 +95,7 @@ const gameController = (() => {
 	const p1 = player('Player 1', 'x');
 	const p2 = player('Player 2', 'o');
 	let round = 1;
+	let gameOver = false;
 
 	const getCurrentPlayerToken = () => {
 		return round % 2 === 1 ? p1.getToken() : p2.getToken();
@@ -103,26 +106,55 @@ const gameController = (() => {
 	}
 
 	const playGame = (index) => {
-		checkWinner(index);
-		gameBoard.setField(index, getCurrentPlayerToken());
+		gameBoard.setField( index, getCurrentPlayerToken());
+		if ( checkWinner( index ) ) {
+			displayController.setMessage(`${getCurrentPlayerName()} is the winner`);
+			gameOver = true;
+			return;
+		}
+		if ( 9 === round ) {
+			displayController.setMessage(`It's a draw!`);
+			gameOver = true;
+			return;
+		}
 		round++;
 		displayController.setMessage(`${getCurrentPlayerName()}'s Turn`);
 	}
 
 	const checkWinner = (index) => {
-		// TODO: determine winner
-		console.log('checking winner');
+		const winningCombinations = [
+			[0, 1, 2],
+			[3, 4, 5],
+			[6, 7, 8],
+			[0, 3, 6],
+			[1, 4, 7],
+			[2, 5, 8],
+			[0, 4, 8],
+			[2, 4, 6],
+		];
+		// console.log('checking winner');
+		return winningCombinations
+			.filter( combination => combination.includes( index ))
+			.some( possibleCombination => possibleCombination.every(
+				i => gameBoard.getField( i ) === getCurrentPlayerToken()
+			)
+		);
 	}
 
 	const resetGame = () => {
 		round = 1;
+		gameOver = false;
 		displayController.setMessage(`${getCurrentPlayerName()}'s Turn`);
+	}
+
+	const isGameOver = () => {
+		return gameOver;
 	}
 
 	displayController.setPlayerInfo(p1, p2);
 	displayController.setMessage(`${getCurrentPlayerName()}'s Turn`);
 
-	return { playGame, resetGame, getCurrentPlayerName };
+	return { playGame, resetGame, getCurrentPlayerName, isGameOver };
 
 })();
 
